@@ -19,7 +19,7 @@ function init(){
    value=value.trim();
    let url;
    try{url=new URL(value);}catch(_){window.alert('Please paste the complete SarNi Quick Entry URL.');return;}
-   if(url.protocol!=='https:'||url.hostname!=='saradasutar.github.io'||!/^\\/SarNi\\/q\\/?$/i.test(url.pathname)||!url.searchParams.get('k')){
+   if(url.protocol!=='https:'||url.hostname!=='saradasutar.github.io'||!['/sarni/q/','/sarni/q'].includes(url.pathname.toLowerCase())||!url.searchParams.get('k')){
      window.alert('This must be your private https://saradasutar.github.io/SarNi/q/?k=... link.');return;
    }
    try{sessionStorage.setItem(storageKey,url.toString());}catch(_){}
