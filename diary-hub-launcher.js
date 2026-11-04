@@ -6,6 +6,9 @@
  if(document.getElementById('sarniHubLaunch'))return;
  const path=location.pathname.toLowerCase();
  const scope=path.includes('/hr/')?'office':path.includes('/analysis/')?'analysis':'all';
+ // Analysis has its own authenticated Stock Notes viewer. Do not show the old
+ // SarNi Diary Centre launcher, which requires an unrelated SarNi login.
+ if(scope==='analysis')return;
  const entryScope=scope==='office'?'office':scope==='analysis'?'stock':'personal';
  const root='https://saradasutar.github.io/SarNi/diary-hub.html';
  function modal(){
