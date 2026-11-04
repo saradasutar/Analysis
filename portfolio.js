@@ -547,6 +547,10 @@ async function api(action,payload={},options={}){
       await new Promise(r=>setTimeout(r,700));
       return api(action,payload,{...options,_retried:true});
     }
+    // Action-specific routing diagnosis. Never log tokens or submitted payloads.
+    if(error && (String(error.code||'')==='MODULE_MOVED' || /This function belongs to the separate SarNi dashboard/i.test(String(error.message||'')))) {
+      error.message='Analysis backend rejected action "'+String(action)+'" (MODULE_MOVED). Verify that this action is allowed in the DEPLOYED Analysis Code.gs and handled by its switch.';
+    }
     throw error;
   }
 }
