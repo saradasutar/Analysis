@@ -51,7 +51,7 @@ function init(){
    try{
      if(typeof state==='undefined'||!state.token){status.textContent='Sign in to Analysis first.';return;}
      if(typeof api!=='function'){status.textContent='Analysis API unavailable.';return;}
-     const result=await api('anStockNotesList',{query:search.value,offset:0,limit:100},{retry:false});
+     const result=await api('anStockNotesList',{query:search.value,offset:0,limit:100},{retry:false,timeoutMs:25000});
      if(current!==latest||overlay.hidden)return;
      const items=Array.isArray(result.items)?result.items:[];
      status.textContent=items.length+' of '+(result.total||0)+' matching notes · Read only';
@@ -62,7 +62,15 @@ function init(){
        article.append(title,meta,body);list.append(article);
      }
      if(!items.length){const empty=document.createElement('p');empty.textContent='No matching Stock Notes found.';list.append(empty);}
-   }catch(err){if(current===latest)status.textContent='Unable to load Stock Notes: '+(err&&err.message||'Check Analysis backend permissions.');}
+   }catch(err){
+     if(current!==latest||overlay.hidden)return;
+     const code=String(err&&err.code||'');
+     const message=String(err&&err.message||'Unknown backend error');
+     const moved=/MODULE_MOVED|separate SarNi dashboard/i.test(code+' '+message);
+     status.textContent=moved
+       ? 'Analysis backend rejected anStockNotesList (MODULE_MOVED). The website is signed in, but the deployed backend has not accepted this new action. Confirm the deployed Analysis /exec URL matches the edited Apps Script deployment and redeploy a new version.'
+       : 'Unable to load Stock Notes'+(code?' ['+code+']':'')+': '+message;
+   }
  }
  btn.onclick=()=>{overlay.hidden=false;search.value='';load();};
  refresh.onclick=load;
