@@ -68,7 +68,7 @@ function init(){
      const message=String(err&&err.message||'Unknown backend error');
      const moved=/MODULE_MOVED|separate SarNi dashboard/i.test(code+' '+message);
      status.textContent=moved
-       ? 'Analysis backend rejected anStockNotesList (MODULE_MOVED). The website is signed in, but the deployed backend has not accepted this new action. Confirm the deployed Analysis /exec URL matches the edited Apps Script deployment and redeploy a new version.'
+       ? 'Analysis backend rejected the Stock Notes read action (MODULE_MOVED). No second password is needed. Use + Add Stock Note to save through SarNi Quick Entry. To view notes here, update the Analysis Apps Script deployment used by this website.'
        : 'Unable to load Stock Notes'+(code?' ['+code+']':'')+': '+message;
    }
  }
