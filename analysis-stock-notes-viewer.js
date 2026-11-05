@@ -12,22 +12,38 @@ function init(){
  fallback.type='button';fallback.className='nav-item';fallback.id='analysisStockNotesFallback';
  fallback.textContent='↗ Stock Note Quick Link';
  fallback.title='Fallback when Analysis backend access is not configured';
- function openFallback(){
-   let raw='';
-   try{raw=sessionStorage.getItem('an_stock_private_quicklink_v1')||'';}catch(_){}
-   const answer=prompt('Paste your PRIVATE SarNi Quick Entry URL (…/SarNi/q/?k=…). Kept only in this browser tab.',raw);
-   if(answer===null)return;
+ const diaryQuick=document.createElement('button');
+ diaryQuick.type='button';diaryQuick.className='nav-item';diaryQuick.id='analysisDiaryQuickLink';
+ diaryQuick.textContent='✎ Diary Quick Entry';
+ diaryQuick.title='Open the existing working SarNi Diary Quick Entry tab';
+ const linkKey='an_stock_private_quicklink_v1';
+ function checkedLink(raw,tab){
    let url;
-   try{url=new URL(answer.trim());}catch(_){alert('Invalid URL');return;}
-   if(url.protocol!=='https:'||url.hostname!=='saradasutar.github.io'||!['/sarni/q','/sarni/q/'].includes(url.pathname.toLowerCase())||!url.searchParams.get('k')){alert('Enter a valid SarNi Quick Entry link.');return;}
-   url.hash='stock';
-   try{sessionStorage.setItem('an_stock_private_quicklink_v1',url.href);}catch(_){}
-   window.open(url.href,'_blank','noopener,noreferrer');
+   try{url=new URL(String(raw||'').trim());}catch(_){return null;}
+   if(url.protocol!=='https:'||url.hostname!=='saradasutar.github.io'||
+      !['/sarni/q','/sarni/q/'].includes(url.pathname.toLowerCase())||
+      !/^[A-Za-z0-9_-]{12,200}$/.test(url.searchParams.get('k')||''))return null;
+   url.hash=tab;return url.href;
  }
+ function openSharedQuick(tab){
+   let stored='';
+   try{stored=sessionStorage.getItem(linkKey)||'';}catch(_){}
+   let target=checkedLink(stored,tab);
+   if(!target){
+     const answer=prompt('Paste your private SarNi Quick Entry URL (…/SarNi/q/?k=…). The same link works for Stock Note and Diary. Saved only for this browser tab.');
+     if(answer===null)return;
+     target=checkedLink(answer,tab);
+     if(!target){alert('Invalid SarNi Quick Entry link. Copy the current shareable link from SarNi admin.');return;}
+     try{sessionStorage.setItem(linkKey,checkedLink(answer,'stock'));}catch(_){}
+   }
+   window.open(target,'_blank','noopener,noreferrer');
+ }
+ function openFallback(){openSharedQuick('stock');}
  fallback.onclick=openFallback;
+ diaryQuick.onclick=()=>openSharedQuick('diary');
  const accountDivider=nav.querySelector('.analysis-nav-account-divider');
- if(accountDivider){nav.insertBefore(view,accountDivider);nav.insertBefore(add,accountDivider);nav.insertBefore(fallback,accountDivider);}
- else nav.append(view,add,fallback);
+ if(accountDivider){nav.insertBefore(view,accountDivider);nav.insertBefore(add,accountDivider);nav.insertBefore(fallback,accountDivider);nav.insertBefore(diaryQuick,accountDivider);}
+ else nav.append(view,add,fallback,diaryQuick);
  const style=document.createElement('style');
  style.textContent='#ans2Overlay[hidden],#ans2Form[hidden],#ans2List[hidden]{display:none!important}#ans2Overlay{position:fixed;inset:0;z-index:100100;background:#142945bd;display:grid;place-items:center;padding:12px}#ans2Pane{width:min(980px,100%);max-height:94dvh;overflow:auto;background:#fff;color:#263a50;border-radius:16px;padding:20px;box-shadow:0 24px 70px #0005;font:14px/1.5 system-ui}#ans2Pane header,#ans2Pane .ans2bar{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:12px}#ans2Pane h2{margin:0;font-size:22px}#ans2Pane button{padding:9px 12px;border-radius:9px;border:1px solid #b9cad9;background:#eef4fa;color:#254764;cursor:pointer;font-weight:700}#ans2Pane .primary{background:#166b55;color:white}#ans2Pane input:not([type=checkbox]),#ans2Pane textarea{padding:9px;border:1px solid #b6c9db;border-radius:8px;width:100%;font:inherit}#ans2Pane textarea{min-height:175px;resize:vertical}#ans2Pane label{display:grid;gap:4px;font-weight:650}#ans2Pane .ans2grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}#ans2Pane .ans2check{display:flex;gap:15px;flex-wrap:wrap;margin:12px 0}#ans2Pane .ans2check label{display:flex;gap:5px;align-items:center}#ans2Pane .ans2check input{width:16px;height:16px}#ans2Rows{display:grid;gap:9px}#ans2Rows article{border:1px solid #dae5ee;background:#fafcff;border-radius:12px;padding:13px}#ans2Rows h3{margin:0;font-size:16px}#ans2Rows .content{white-space:pre-wrap;overflow-wrap:anywhere;margin-top:8px}#ans2Rows .meta,#ans2Hint{font-size:12px;color:#5c7183}#ans2Status{min-height:25px;font-size:13px;white-space:pre-wrap}#ans2Status.error{color:#a42435}@media(max-width:650px){#ans2Pane .ans2grid{grid-template-columns:1fr}}';
  document.head.appendChild(style);
