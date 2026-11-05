@@ -1342,7 +1342,7 @@ function updateVersionLabels(){
   if(els.dashboardVersion)els.dashboardVersion.textContent=`Frontend · v${APP_VERSION}`;
   if(els.dashboardVersionTop)els.dashboardVersionTop.textContent=`FE v${APP_VERSION}`;
   if(els.mobileFrontendVersion)els.mobileFrontendVersion.textContent=`FE v${APP_VERSION}`;
-  if(els.loginBackendVersion)els.loginBackendVersion.textContent=`Backend · v${backendVersion}`;
+  if(els.loginBackendVersion)els.loginBackendVersion.textContent=state.token?`Backend · v${backendVersion}`:'Backend · checked after sign-in';
   if(els.dashboardBackendVersion)els.dashboardBackendVersion.textContent=`Backend · v${backendVersion}`;
   if(els.dashboardBackendVersionTop)els.dashboardBackendVersionTop.textContent=`BE v${backendVersion}`;
   if(els.mobileBackendVersion)els.mobileBackendVersion.textContent=`BE v${backendVersion}`;
