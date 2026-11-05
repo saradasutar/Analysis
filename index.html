@@ -166,6 +166,51 @@
   .analysis-portfolio .topbar .dashboard-version-pair {display: none !important;}
 }
 </style>
+<style id="analysis-top-toolbar-20261105">
+/* Dedicated first row for every global control. Keep module tabs and title separate below. */
+.analysis-portfolio .main-content > .analysis-global-toolbar{
+  position:sticky!important;top:0!important;z-index:44!important;
+  display:flex!important;align-items:center!important;justify-content:space-between!important;
+  gap:12px!important;min-height:64px!important;padding:9px 14px!important;
+  margin:0 0 10px!important;border:1px solid #e0e6f2!important;border-radius:12px!important;
+  background:rgba(255,255,255,.97)!important;box-shadow:0 3px 12px rgba(15,23,42,.06)!important;
+}
+.analysis-portfolio .analysis-global-toolbar .dashboard-version-pair{
+ display:inline-flex!important;flex-direction:row!important;flex-wrap:nowrap!important;
+ gap:7px!important;align-items:center!important;min-width:max-content!important;flex:0 0 auto!important;
+}
+.analysis-portfolio .analysis-global-toolbar .dashboard-version-chip{
+ white-space:nowrap!important;flex:0 0 auto!important;
+}
+.analysis-portfolio .analysis-global-toolbar .top-actions{
+ flex:1 1 auto!important;min-width:0!important;justify-content:flex-end!important;
+ display:flex!important;flex-wrap:nowrap!important;gap:7px!important;
+}
+.analysis-portfolio .analysis-global-toolbar .top-actions>*{flex-shrink:0!important}
+.analysis-portfolio .analysis-portfolio-tabs{position:relative!important;top:auto!important;z-index:1!important;margin:0 0 12px!important;}
+.analysis-portfolio .analysis-page-heading{
+ display:flex;flex-direction:column;justify-content:center;min-height:55px;
+ margin:0 0 12px;padding:0 3px;
+}
+.analysis-portfolio .analysis-page-heading .eyebrow{margin:0 0 2px;color:#7366d5;font-size:10px;font-weight:850;letter-spacing:.08em}
+.analysis-portfolio .analysis-page-heading h1{margin:0!important;font-size:clamp(21px,2.25vw,30px)!important;line-height:1.12!important;color:#162138}
+@media(max-width:1350px){
+ .analysis-portfolio .analysis-global-toolbar{gap:8px!important;padding:8px!important}
+ .analysis-portfolio .analysis-global-toolbar .top-actions{gap:5px!important}
+ .analysis-portfolio .analysis-global-toolbar .display-preferences select{max-width:75px!important}
+}
+@media(max-width:1120px){
+ .analysis-portfolio .analysis-global-toolbar .top-actions #addInvestmentBtn{display:none!important}
+ .analysis-portfolio .analysis-global-toolbar .analysis-header-account{display:none!important}
+}
+@media(max-width:860px){
+ .analysis-portfolio .main-content>.analysis-global-toolbar{position:sticky!important;top:0!important;min-height:52px!important;padding:6px!important;gap:5px!important}
+ .analysis-portfolio .analysis-global-toolbar .dashboard-version-pair{display:none!important}
+ .analysis-portfolio .analysis-global-toolbar .top-actions{gap:4px!important}
+ .analysis-portfolio .analysis-page-heading{min-height:40px;margin-bottom:8px}
+ .analysis-portfolio .analysis-page-heading h1{font-size:20px!important}
+}
+</style>
 <style id="analysis-unified-style">
   .analysis-market-section { padding:0!important; max-width:none!important; }
   .analysis-market-heading { display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin:8px 0 12px;padding:12px 15px;background:var(--surface,#fff);border:1px solid #d8e5f5;border-radius:14px; }
@@ -248,6 +293,11 @@
     </aside>
 
     <main id="mainDashboard" class="main-content" tabindex="-1">
+      <header class="topbar analysis-global-toolbar" aria-label="Dashboard controls">
+        <div class="dashboard-version-pair"><span id="dashboardVersionTop" class="dashboard-version-chip">FE v20.2.1</span><span id="dashboardBackendVersionTop" class="dashboard-version-chip backend-chip">BE v4.1.1</span></div>
+        <div class="top-actions"><button id="commandPaletteBtn" class="command-palette-button" type="button" title="Search pages and actions (Ctrl/⌘ K)" aria-haspopup="dialog"><span>⌕</span><strong>Search</strong><kbd>⌘K</kbd></button><div class="display-preferences" title="Personalise dashboard appearance"><select id="displayDensitySelect" aria-label="Dashboard density"><option value="COMFORTABLE">Comfortable</option><option value="COMPACT">Compact</option></select><select id="displayThemeSelect" aria-label="Dashboard theme"><option value="LIGHT" selected>Light</option><option value="AUTO">Auto theme</option><option value="DARK">Dark</option></select></div><div class="auto-refresh-control" title="Automatically refresh portfolio and watchlist prices while this dashboard is open"><span class="auto-pulse"></span><div class="auto-refresh-copy"><strong>Auto update</strong><span id="autoRefreshCountdown">15 min</span></div><select id="autoRefreshSelect" aria-label="Auto update interval"><option value="5">5 min</option><option value="15" selected>15 min</option><option value="30">30 min</option><option value="60">60 min</option><option value="0">Off</option></select></div><div class="sync-status" id="syncStatus"><span class="status-dot"></span><span>Ready</span></div><button id="refreshBtn" class="icon-button" title="Refresh prices and NAVs" aria-label="Refresh prices and NAVs">↻</button><button id="addInvestmentBtn" class="primary-button">+ Add investment</button><div class="analysis-header-account" title="Signed-in Analysis account"><span class="analysis-account-dot" aria-hidden="true"></span><strong id="dashboardUsername">—</strong><span id="dashboardVersion" hidden>Frontend · v20.2.1</span><span id="dashboardBackendVersion" hidden>Backend · v4.1.2</span></div><button id="profileButton" class="avatar-button" aria-label="Signed-in user"><span id="avatarInitial">A</span></button><button id="headerLogoutBtn" class="header-logout-button" type="button" title="Sign out of SarNi" aria-label="Sign out"><span aria-hidden="true">↪</span><strong>Sign out</strong></button></div>
+      </header>
+
         <nav class="analysis-portfolio-tabs" aria-label="Investment module navigation">
           <button type="button" data-portfolio-route="market" class="analysis-portfolio-tab analysis-home-tab active">◈ Market Analysis</button>
           <button type="button" data-portfolio-route="investment" class="analysis-portfolio-tab">Investment</button>
@@ -256,10 +306,7 @@
           <button type="button" data-portfolio-route="sip" class="analysis-portfolio-tab">SIP Planner</button>
         </nav>
 
-      <header class="topbar">
-        <div><div class="topbar-title-line"><div><p class="eyebrow" id="todayLabel"></p><h1 id="pageTitle">Investment Portfolio</h1></div><div class="dashboard-version-pair"><span id="dashboardVersionTop" class="dashboard-version-chip">FE v20.2.1</span><span id="dashboardBackendVersionTop" class="dashboard-version-chip backend-chip">BE v4.1.1</span></div></div></div>
-        <div class="top-actions"><button id="commandPaletteBtn" class="command-palette-button" type="button" title="Search pages and actions (Ctrl/⌘ K)" aria-haspopup="dialog"><span>⌕</span><strong>Search</strong><kbd>⌘K</kbd></button><div class="display-preferences" title="Personalise dashboard appearance"><select id="displayDensitySelect" aria-label="Dashboard density"><option value="COMFORTABLE">Comfortable</option><option value="COMPACT">Compact</option></select><select id="displayThemeSelect" aria-label="Dashboard theme"><option value="LIGHT" selected>Light</option><option value="AUTO">Auto theme</option><option value="DARK">Dark</option></select></div><div class="auto-refresh-control" title="Automatically refresh portfolio and watchlist prices while this dashboard is open"><span class="auto-pulse"></span><div class="auto-refresh-copy"><strong>Auto update</strong><span id="autoRefreshCountdown">15 min</span></div><select id="autoRefreshSelect" aria-label="Auto update interval"><option value="5">5 min</option><option value="15" selected>15 min</option><option value="30">30 min</option><option value="60">60 min</option><option value="0">Off</option></select></div><div class="sync-status" id="syncStatus"><span class="status-dot"></span><span>Ready</span></div><button id="refreshBtn" class="icon-button" title="Refresh prices and NAVs" aria-label="Refresh prices and NAVs">↻</button><button id="addInvestmentBtn" class="primary-button">+ Add investment</button><div class="analysis-header-account" title="Signed-in Analysis account"><span class="analysis-account-dot" aria-hidden="true"></span><strong id="dashboardUsername">—</strong><span id="dashboardVersion" hidden>Frontend · v20.2.1</span><span id="dashboardBackendVersion" hidden>Backend · v4.1.2</span></div><button id="profileButton" class="avatar-button" aria-label="Signed-in user"><span id="avatarInitial">A</span></button><button id="headerLogoutBtn" class="header-logout-button" type="button" title="Sign out of SarNi" aria-label="Sign out"><span aria-hidden="true">↪</span><strong>Sign out</strong></button></div>
-      </header>
+      <section class="analysis-page-heading" aria-label="Current dashboard section"><p class="eyebrow" id="todayLabel"></p><h1 id="pageTitle">Investment Portfolio</h1></section>
 
       <div id="mobileSessionBar" class="mobile-session-bar" aria-label="Mobile session controls">
         <div class="mobile-session-versions">
