@@ -2989,6 +2989,8 @@ const CHAPTER_STATUS_LABEL={NOT_STARTED:'Not started',DRAFTING:'Drafting',REVIEW
 const BOOK_ROLE_LABEL={OWNER:'Owner',CO_AUTHOR:'Co-author',EDITOR:'Editor',VIEWER:'Viewer'};
 
 async function loadBooks(){
+  // Books belongs to SarNi and is deliberately excluded from the Analysis-only backend.
+  if(document.documentElement.classList.contains('analysis-portfolio'))return;
   if(!els.booksGrid)return;
   try{
     const r=await api('listBooks',{});
