@@ -211,6 +211,35 @@
  .analysis-portfolio .analysis-page-heading h1{font-size:20px!important}
 }
 </style>
+<style id="analysis-movers-style-v1">
+.analysis-portfolio .analysis-movers-strip{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(180px,1.1fr);gap:12px;margin:12px 0}
+.analysis-portfolio .analysis-movers-card{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:6px;min-width:0;padding:14px 18px;background:#edfaf3;border:1px solid #bce6d2;border-left:4px solid #12ac78;border-radius:12px;color:#13634c;cursor:pointer}
+.analysis-portfolio .analysis-movers-card.loss{background:#fff1f1;border-color:#f5cacd;border-left-color:#e04d59;color:#aa3441}
+.analysis-portfolio .analysis-movers-card:hover{filter:brightness(.98);box-shadow:0 5px 15px #192f4514}
+.analysis-portfolio .analysis-movers-card>span{font-weight:850;font-size:13px}
+.analysis-portfolio .analysis-movers-card strong{font-size:30px;line-height:1.1}
+.analysis-portfolio .analysis-movers-card small{font-size:12px;opacity:.9}
+.analysis-portfolio .analysis-movers-source{display:flex;flex-direction:column;gap:6px;align-items:flex-start;justify-content:center;padding:14px;border:1px solid #dde4f0;border-radius:12px;background:#fff}
+.analysis-portfolio .analysis-movers-source strong{font-size:14px}.analysis-portfolio .analysis-movers-source span{font-size:12px;color:#5f7184}
+.analysis-portfolio .analysis-movers-source button,.analysis-movers-dialog button{background:#f4f7ff;border:1px solid #cdd8ed;border-radius:8px;color:#1c4b85;font-weight:750;padding:8px 12px;cursor:pointer}
+.analysis-portfolio .analysis-movers-warning{font-size:12px;color:#79562b;background:#fffaea;border:1px solid #f4e5ba;padding:9px 12px;border-radius:9px;margin:2px 0 12px}
+.analysis-movers-backdrop[hidden]{display:none!important}
+.analysis-movers-backdrop{position:fixed;inset:0;z-index:200050;background:#091a33b5;display:grid;place-items:center;padding:15px}
+.analysis-movers-dialog{width:min(960px,100%);max-height:92dvh;overflow:auto;padding:clamp(16px,2vw,26px);border-radius:16px;background:#fff;color:#1e3044;box-shadow:0 25px 80px #0004;font:14px/1.5 system-ui}
+.analysis-movers-dialog>header{display:flex;justify-content:space-between;align-items:start;gap:10px}
+.analysis-movers-dialog h2{font-size:21px;margin:0}.analysis-movers-dialog header p{font-size:12px;color:#697889}
+.analysis-movers-tools{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin:18px 0}
+.analysis-movers-tools label{font-weight:700;font-size:12px}
+.analysis-movers-tools select{padding:9px;border-radius:8px;border:1px solid #cdd8ed;background:#fff}
+.analysis-movers-summary{margin:10px 0;color:#536980}
+.analysis-movers-table-wrap{overflow:auto;max-height:49vh;min-height:80px;border:1px solid #d9e2ed;border-radius:10px}
+.analysis-movers-dialog table{width:100%;border-collapse:collapse;text-align:left;font-size:13px}
+.analysis-movers-dialog th,.analysis-movers-dialog td{padding:10px 12px;border-bottom:1px solid #e8eff5;white-space:nowrap}
+.analysis-movers-dialog th{position:sticky;top:0;background:#f5f7fb;font-weight:800}
+.analysis-movers-status{color:#586f83;font-size:12px;margin-top:12px}
+@media(max-width:800px){.analysis-portfolio .analysis-movers-strip{grid-template-columns:1fr 1fr}.analysis-portfolio .analysis-movers-source{grid-column:1/-1}.analysis-movers-dialog{max-height:96dvh}}
+@media(max-width:480px){.analysis-portfolio .analysis-movers-strip{grid-template-columns:1fr}.analysis-portfolio .analysis-movers-source{grid-column:auto}.analysis-movers-card strong{font-size:24px}}
+</style>
 <style id="analysis-unified-style">
   .analysis-market-section { padding:0!important; max-width:none!important; }
   .analysis-market-heading { display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin:8px 0 12px;padding:12px 15px;background:var(--surface,#fff);border:1px solid #d8e5f5;border-radius:14px; }
@@ -339,6 +368,18 @@
       
 <section id="marketSection" class="page-section analysis-market-section hidden" aria-label="Market Analysis">
   <div class="analysis-market-heading"><div><strong>Market Analysis</strong><span>Stocks · Mutual Funds · Screener · Watchlists · Notes</span></div><span class="analysis-market-connected">✓ Analysis account</span></div>
+  <section id="analysisMarketMovers" class="analysis-movers-strip" aria-label="Verified market movers">
+    <button id="analysisShowGainers" class="analysis-movers-card gain" type="button">
+      <span>📈 Gainers <span aria-hidden="true">↗</span></span><strong id="analysisGainCount">—</strong>
+      <small>View companies and daily change</small>
+    </button>
+    <button id="analysisShowLosers" class="analysis-movers-card loss" type="button">
+      <span>📉 Losers <span aria-hidden="true">↗</span></span><strong id="analysisLossCount">—</strong>
+      <small>View companies and daily change</small>
+    </button>
+    <div class="analysis-movers-source"><strong>Market breadth</strong><span id="analysisMarketFeedLabel">Checking verified source…</span><button id="analysisMoversNseCard" type="button">Official NSE data ↗</button></div>
+  </section>
+  <p class="analysis-movers-warning"><strong>Data note:</strong> The Screener below contains illustrative stock figures. It must not be used as a live NSE price feed.</p>
   <div class="analysis-market-frame-container"><iframe id="analysisMarketFrame" title="IndiaMarket Pro Stock and Mutual Fund Analysis" loading="lazy" referrerpolicy="same-origin" allow="clipboard-read; clipboard-write"></iframe></div>
   <p class="analysis-market-footnote">Market watchlists, notes and preferences from the original market dashboard are stored in this browser. Investment data is stored separately in your Analysis Google Sheet.</p>
 </section>
@@ -1871,6 +1912,21 @@
     </div>
   </aside>
 
+<div id="analysisMoversModal" class="analysis-movers-backdrop" hidden>
+  <section class="analysis-movers-dialog" role="dialog" aria-modal="true" aria-labelledby="analysisMoversTitle">
+    <header><div><h2 id="analysisMoversTitle">Market movers</h2><p>Verified price changes only · no simulated values</p></div><button id="analysisMoversClose" type="button" aria-label="Close market movers">✕ Close</button></header>
+    <div class="analysis-movers-tools">
+      <label for="analysisMoversUniverse">Stock universe</label>
+      <select id="analysisMoversUniverse"><option value="NIFTY50">Nifty 50</option><option value="NIFTY500">Nifty 500</option><option value="WATCHLIST">My watchlist</option></select>
+      <button type="button" id="analysisMoversRefresh">Refresh</button>
+      <button type="button" id="analysisMoversNse">View official NSE ↗</button>
+    </div>
+    <p id="analysisMoversSummary" class="analysis-movers-summary"></p>
+    <div class="analysis-movers-table-wrap"><table><thead><tr><th>Symbol</th><th>Company</th><th>Previous close</th><th>Latest price</th><th>Change %</th></tr></thead><tbody id="analysisMoversRows"></tbody></table></div>
+    <p id="analysisMoversStatus" class="analysis-movers-status" role="status"></p>
+  </section>
+</div>
+
   <div id="toastRegion" class="toast-region" aria-live="polite"></div>
     <div id="idleWarningBar" class="idle-warning-bar hidden" role="status" aria-live="polite">
       <span>Auto logout in <strong id="idleWarningCountdown">60 sec</strong> due to inactivity.</span>
@@ -1885,5 +1941,6 @@
   <script src="./portfolio.js?v=20261105-sidebar-books-fix" defer onload="sarNiAssetLoaded('app')" onerror="sarNiAssetFailed('app')"></script>
 <!-- Legacy SarNi separate-sign-in launcher removed from Analysis. -->
 <script defer src="./analysis-stock-notes-viewer.js?v=20261105-nav-account-scroll"></script>
+<script defer src="./analysis-market-movers.js?v=20261105-verified-only"></script>
 </body>
 </html>
