@@ -3,7 +3,7 @@
 const CONFIG = window.PORTFOLIO_CONFIG || {};
 const APP_VERSION = '20.2.1';
 const EXPECTED_BACKEND_VERSION = '4.1.1';
-const HIDDEN_SECURITY_FALLBACK_MS = 5 * 60 * 1000;
+const HIDDEN_SECURITY_FALLBACK_MS = 0; // Background sessions obey the selected inactivity policy.
 const SESSION_HEARTBEAT_MS = 2 * 60 * 1000;
 const ACTIVITY_WRITE_THROTTLE_MS = 10000;
 const LAST_ACTIVITY_KEY = 'myfinance_last_activity_at';
@@ -1734,7 +1734,7 @@ function showLoggedOutUi(){
 }
 
 function nowMs(){return Date.now();}
-function idleTimeoutMs(){return Math.max(5,Math.min(30,Number(state.securityIdleMinutes)||30))*60*1000;}
+function idleTimeoutMs(){return Math.max(5,Math.min(120,Number(state.securityIdleMinutes)||30))*60*1000;}
 function idleWarningMs(){return Math.max(0,idleTimeoutMs()-60000);}
 function setLastActivity(ts=nowMs(),{forceWrite=false}={}){
   state.lastActivityAt=Number(ts)||nowMs();
@@ -1747,7 +1747,7 @@ function setLastActivity(ts=nowMs(),{forceWrite=false}={}){
 function locallySessionExpired(){
   if(!state.token)return false;
   const hidden=Number(localStorage.getItem(LAST_HIDDEN_KEY)||0),activity=Number(localStorage.getItem(LAST_ACTIVITY_KEY)||state.lastActivityAt||0);
-  return hidden?nowMs()-hidden>=HIDDEN_SECURITY_FALLBACK_MS:Boolean(activity)&&nowMs()-activity>=idleTimeoutMs();
+  return Boolean(activity)&&nowMs()-activity>=idleTimeoutMs();
 }
 function showIdleWarning(){
   if(!state.token||state.idleWarningShown)return;
@@ -1792,8 +1792,8 @@ function checkSessionIdle(){
   if(!state.token)return;
   const idleFor=nowMs()-Number(state.lastActivityAt||nowMs());
   const hiddenAt=Number(localStorage.getItem(LAST_HIDDEN_KEY)||0);
-  if(hiddenAt&&nowMs()-hiddenAt>=HIDDEN_SECURITY_FALLBACK_MS){
-    autoLogoutForInactivity('Logged out by the secure five-minute closed/background fallback.');
+  if(hiddenAt&&nowMs()-Number(state.lastActivityAt||hiddenAt)>=idleTimeoutMs()){
+    autoLogoutForInactivity();
     return;
   }
   if(idleFor>=idleTimeoutMs()){
@@ -1845,8 +1845,8 @@ function markPageHidden(){
 function markPageVisible(){
   if(!state.token)return;
   const hiddenAt=Number(localStorage.getItem(LAST_HIDDEN_KEY)||0);
-  if(hiddenAt&&nowMs()-hiddenAt>=HIDDEN_SECURITY_FALLBACK_MS){
-    autoLogoutForInactivity('Logged out by the secure five-minute closed/background fallback.');
+  if(hiddenAt&&nowMs()-Number(state.lastActivityAt||hiddenAt)>=idleTimeoutMs()){
+    autoLogoutForInactivity();
     return;
   }
   try{localStorage.removeItem(LAST_HIDDEN_KEY);}catch{}
@@ -2003,6 +2003,7 @@ function applyPortfolioHashRoute(){
 }
 
 function showApp(){
+  initAnalysisLogoutDuration();
   els.loginView.classList.add('hidden');
   els.appView.classList.remove('hidden');
   els.sideAppName.textContent=CONFIG.APP_NAME||'My Finance';
@@ -5155,8 +5156,29 @@ function renderUsers(){
   }).join('');
 }
 
-function applySecuritySettings(settings){const minutes=Number(settings?.idleTimeoutMinutes);if([5,10,15,20,30].includes(minutes))state.securityIdleMinutes=minutes;renderSecuritySettings();}
-function renderSecuritySettings(){if(els.securityIdleTimeout)els.securityIdleTimeout.value=String(state.securityIdleMinutes||30);if(els.securityPolicyBadge)els.securityPolicyBadge.textContent=`${state.securityIdleMinutes||30}-minute policy`;if(els.securitySettingsStatus)els.securitySettingsStatus.textContent=`Current policy: sign out after ${state.securityIdleMinutes||30} minutes of inactivity · warning during final minute · five-minute closed/background fallback.`;}
+function analysisChangeLogoutDuration(event){
+  const select=event?.target,minutes=Number(select?.value);
+  if(!select||![5,10,15,20,30,60,120].includes(minutes))return;
+  if(!state.token){select.value=String(state.securityIdleMinutes||30);return;}
+  if(state.user?.role!=='ADMIN'){toast('Only Analysis administrators may change the shared logout policy.','error');select.value=String(state.securityIdleMinutes||30);return;}
+  select.disabled=true;
+  api('saveSecuritySettings',{idleTimeoutMinutes:minutes},{retry:false}).then(result=>{
+    applySecuritySettings(result.securitySettings);
+    toast('Automatic logout set to '+(minutes===60?'1 hour':minutes===120?'2 hours':minutes+' minutes')+' of inactivity.','success');
+    checkSessionIdle();
+  }).catch(err=>{
+    select.value=String(state.securityIdleMinutes||30);
+    toast('Cannot update logout policy: '+(err?.message||'Backend must be updated and redeployed.'),'error');
+  }).finally(()=>{select.disabled=false;});
+}
+function initAnalysisLogoutDuration(){
+  const select=document.getElementById('analysisLogoutDuration');if(!select||select.dataset.bound)return;
+  select.dataset.bound='1';select.addEventListener('change',analysisChangeLogoutDuration);
+  renderSecuritySettings();
+}
+
+function applySecuritySettings(settings){const minutes=Number(settings?.idleTimeoutMinutes);if([5,10,15,20,30,60,120].includes(minutes))state.securityIdleMinutes=minutes;renderSecuritySettings();}
+function renderSecuritySettings(){const minutes=state.securityIdleMinutes||30;const duration=minutes===120?'2 hours':minutes===60?'1 hour':minutes+' minutes';if(els.securityIdleTimeout)els.securityIdleTimeout.value=String(minutes);if(els.securityPolicyBadge)els.securityPolicyBadge.textContent=`${duration} policy`;if(els.securitySettingsStatus)els.securitySettingsStatus.textContent=`Current policy: sign out after ${duration} of inactivity · warning during final minute · applies in the background too.`;const control=document.getElementById('analysisLogoutDuration');if(control)control.value=String(minutes);}
 async function saveSecuritySettings(event){event.preventDefault();const minutes=Number(els.securityIdleTimeout?.value);setBusy(els.saveSecuritySettingsBtn,true,'Saving…');try{const r=await api('saveSecuritySettings',{idleTimeoutMinutes:minutes});applySecuritySettings(r.securitySettings);setLastActivity(nowMs(),{forceWrite:true});toast(`Security policy updated to ${minutes} minutes for all users.`,'success');}catch(e){toast(e.message,'error');}finally{setBusy(els.saveSecuritySettingsBtn,false);}}
 function detailDate(value){
   if(!value)return '—';
