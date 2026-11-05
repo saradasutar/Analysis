@@ -43,7 +43,7 @@
   </style>
   
   <link rel="preload" href="./portfolio.css?v=20260910-20108-codingbook" as="style">
-  <link rel="preload" href="./portfolio.js?v=20261105-sidebar-books-fix" as="script">
+  <link rel="preload" href="./portfolio.js?v=20261105-logout-1h-2h" as="script">
   <link rel="stylesheet" href="./portfolio.css?v=20260910-20108-codingbook" onload="sarNiAssetLoaded('css')" onerror="sarNiAssetFailed('css')">
 
 <style id="analysis-portfolio-only">
@@ -240,6 +240,14 @@
 @media(max-width:800px){.analysis-portfolio .analysis-movers-strip{grid-template-columns:1fr 1fr}.analysis-portfolio .analysis-movers-source{grid-column:1/-1}.analysis-movers-dialog{max-height:96dvh}}
 @media(max-width:480px){.analysis-portfolio .analysis-movers-strip{grid-template-columns:1fr}.analysis-portfolio .analysis-movers-source{grid-column:auto}.analysis-movers-card strong{font-size:24px}}
 </style>
+<style id="analysis-auto-logout-v1">
+.analysis-portfolio .analysis-idle-control{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:5px 7px;border:1px solid #dbe4f0;border-radius:10px;background:#fff;color:#455a77;font-size:11px;font-weight:750;white-space:nowrap}
+.analysis-portfolio .analysis-idle-control select{max-width:85px;padding:5px 2px;border:0;background:#f3f6ff;border-radius:7px;color:#183c69;font-weight:800;font-size:11px;cursor:pointer}
+.analysis-portfolio .analysis-idle-control select:disabled{opacity:.7;cursor:wait}
+@media(max-width:1160px){.analysis-portfolio .analysis-idle-control>span{display:none}}
+@media(max-width:860px){.analysis-portfolio .analysis-idle-control{padding:4px!important;min-height:30px!important}.analysis-portfolio .analysis-idle-control select{max-width:72px!important;font-size:10px!important}}
+@media(max-width:500px){.analysis-portfolio .analysis-idle-control{display:none!important}}
+</style>
 <style id="analysis-unified-style">
   .analysis-market-section { padding:0!important; max-width:none!important; }
   .analysis-market-heading { display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin:8px 0 12px;padding:12px 15px;background:var(--surface,#fff);border:1px solid #d8e5f5;border-radius:14px; }
@@ -324,7 +332,7 @@
     <main id="mainDashboard" class="main-content" tabindex="-1">
       <header class="topbar analysis-global-toolbar" aria-label="Dashboard controls">
         <div class="dashboard-version-pair"><span id="dashboardVersionTop" class="dashboard-version-chip">FE v20.2.1</span><span id="dashboardBackendVersionTop" class="dashboard-version-chip backend-chip">BE v4.1.1</span></div>
-        <div class="top-actions"><button id="commandPaletteBtn" class="command-palette-button" type="button" title="Search pages and actions (Ctrl/⌘ K)" aria-haspopup="dialog"><span>⌕</span><strong>Search</strong><kbd>⌘K</kbd></button><div class="display-preferences" title="Personalise dashboard appearance"><select id="displayDensitySelect" aria-label="Dashboard density"><option value="COMFORTABLE">Comfortable</option><option value="COMPACT">Compact</option></select><select id="displayThemeSelect" aria-label="Dashboard theme"><option value="LIGHT" selected>Light</option><option value="AUTO">Auto theme</option><option value="DARK">Dark</option></select></div><div class="auto-refresh-control" title="Automatically refresh portfolio and watchlist prices while this dashboard is open"><span class="auto-pulse"></span><div class="auto-refresh-copy"><strong>Auto update</strong><span id="autoRefreshCountdown">15 min</span></div><select id="autoRefreshSelect" aria-label="Auto update interval"><option value="5">5 min</option><option value="15" selected>15 min</option><option value="30">30 min</option><option value="60">60 min</option><option value="0">Off</option></select></div><div class="sync-status" id="syncStatus"><span class="status-dot"></span><span>Ready</span></div><button id="refreshBtn" class="icon-button" title="Refresh prices and NAVs" aria-label="Refresh prices and NAVs">↻</button><button id="addInvestmentBtn" class="primary-button">+ Add investment</button><div class="analysis-header-account" title="Signed-in Analysis account"><span class="analysis-account-dot" aria-hidden="true"></span><strong id="dashboardUsername">—</strong><span id="dashboardVersion" hidden>Frontend · v20.2.1</span><span id="dashboardBackendVersion" hidden>Backend · v4.1.2</span></div><button id="profileButton" class="avatar-button" aria-label="Signed-in user"><span id="avatarInitial">A</span></button><button id="headerLogoutBtn" class="header-logout-button" type="button" title="Sign out of SarNi" aria-label="Sign out"><span aria-hidden="true">↪</span><strong>Sign out</strong></button></div>
+        <div class="top-actions"><button id="commandPaletteBtn" class="command-palette-button" type="button" title="Search pages and actions (Ctrl/⌘ K)" aria-haspopup="dialog"><span>⌕</span><strong>Search</strong><kbd>⌘K</kbd></button><div class="display-preferences" title="Personalise dashboard appearance"><select id="displayDensitySelect" aria-label="Dashboard density"><option value="COMFORTABLE">Comfortable</option><option value="COMPACT">Compact</option></select><select id="displayThemeSelect" aria-label="Dashboard theme"><option value="LIGHT" selected>Light</option><option value="AUTO">Auto theme</option><option value="DARK">Dark</option></select></div><label class="analysis-idle-control" title="Automatically sign out after no activity. Requires Analysis backend 1-hour/2-hour security update."><span>Auto logout</span><select id="analysisLogoutDuration" aria-label="Automatic logout after inactivity"><option value="5">5 min</option><option value="10">10 min</option><option value="15">15 min</option><option value="20">20 min</option><option value="30" selected>30 min</option><option value="60">1 hour</option><option value="120">2 hours</option></select></label><div class="auto-refresh-control" title="Automatically refresh portfolio and watchlist prices while this dashboard is open"><span class="auto-pulse"></span><div class="auto-refresh-copy"><strong>Auto update</strong><span id="autoRefreshCountdown">15 min</span></div><select id="autoRefreshSelect" aria-label="Auto update interval"><option value="5">5 min</option><option value="15" selected>15 min</option><option value="30">30 min</option><option value="60">60 min</option><option value="0">Off</option></select></div><div class="sync-status" id="syncStatus"><span class="status-dot"></span><span>Ready</span></div><button id="refreshBtn" class="icon-button" title="Refresh prices and NAVs" aria-label="Refresh prices and NAVs">↻</button><button id="addInvestmentBtn" class="primary-button">+ Add investment</button><div class="analysis-header-account" title="Signed-in Analysis account"><span class="analysis-account-dot" aria-hidden="true"></span><strong id="dashboardUsername">—</strong><span id="dashboardVersion" hidden>Frontend · v20.2.1</span><span id="dashboardBackendVersion" hidden>Backend · v4.1.2</span></div><button id="profileButton" class="avatar-button" aria-label="Signed-in user"><span id="avatarInitial">A</span></button><button id="headerLogoutBtn" class="header-logout-button" type="button" title="Sign out of SarNi" aria-label="Sign out"><span aria-hidden="true">↪</span><strong>Sign out</strong></button></div>
       </header>
 
         <nav class="analysis-portfolio-tabs" aria-label="Investment module navigation">
@@ -1243,8 +1251,8 @@
             <span id="securityPolicyBadge" class="security-policy-badge">30-minute default</span>
           </div>
           <form id="securitySettingsForm" class="security-settings-form">
-            <label>Sign out after inactivity<select id="securityIdleTimeout" required><option value="5">5 minutes</option><option value="10">10 minutes</option><option value="15">15 minutes</option><option value="20">20 minutes</option><option value="30" selected>30 minutes (default)</option></select></label>
-            <div class="security-policy-facts"><span><strong>1 minute</strong> warning</span><span><strong>5 minutes</strong> secure background/closed fallback</span><span><strong>All users</strong> and devices</span></div>
+            <label>Sign out after inactivity<select id="securityIdleTimeout" required><option value="5">5 minutes</option><option value="10">10 minutes</option><option value="15">15 minutes</option><option value="20">20 minutes</option><option value="30" selected>30 minutes (default)</option><option value="60">1 hour</option><option value="120">2 hours</option></select></label>
+            <div class="security-policy-facts"><span><strong>1 minute</strong> warning</span><span><strong>Selected timeout</strong> also applies while in the background</span><span><strong>All users</strong> and devices</span></div>
             <button id="saveSecuritySettingsBtn" type="submit" class="primary-button">Save security settings</button>
           </form>
           <p id="securitySettingsStatus" class="security-settings-status" aria-live="polite">Current policy: sign out after 30 minutes of inactivity.</p>
@@ -1938,7 +1946,7 @@
       APP_NAME:'Analysis · Portfolio',CURRENCY:'INR',REQUEST_TIMEOUT_MS:60000,OWNERS:['Sarada','Niharika']
     };
   </script>
-  <script src="./portfolio.js?v=20261105-sidebar-books-fix" defer onload="sarNiAssetLoaded('app')" onerror="sarNiAssetFailed('app')"></script>
+  <script src="./portfolio.js?v=20261105-logout-1h-2h" defer onload="sarNiAssetLoaded('app')" onerror="sarNiAssetFailed('app')"></script>
 <!-- Legacy SarNi separate-sign-in launcher removed from Analysis. -->
 <script defer src="./analysis-stock-notes-viewer.js?v=20261105-nav-account-scroll"></script>
 <script defer src="./analysis-market-movers.js?v=20261105-verified-only"></script>
