@@ -53,6 +53,47 @@
   .side-nav [data-section="watchlist"],
   #quickDiaryBtn, #portfolioStartupRetryBtn.analysis-not-needed {display:none!important}
 </style>
+
+<style id="analysis-sidebar-scroll-fix-20261105">
+@media (min-width: 861px) {
+  .analysis-portfolio .sidebar {
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .analysis-portfolio .sidebar > .side-brand {
+    flex: 0 0 auto !important;
+  }
+  .analysis-portfolio .sidebar > .side-nav {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(175,189,218,.55) transparent;
+    overscroll-behavior: contain;
+    align-content: start !important;
+    grid-auto-rows: max-content;
+    padding-bottom: 15px !important;
+  }
+  .analysis-portfolio .sidebar > .sidebar-session-card {
+    flex: 0 0 auto !important;
+    margin-top: 8px !important;
+  }
+  .analysis-portfolio .sidebar > .sidebar-foot {
+    flex: 0 0 auto !important;
+    margin-top: 0 !important;
+    padding-bottom: max(12px,env(safe-area-inset-bottom)) !important;
+    position: relative;
+    z-index: 2;
+  }
+  .analysis-portfolio .sidebar > .side-nav::-webkit-scrollbar { width: 6px; }
+  .analysis-portfolio .sidebar > .side-nav::-webkit-scrollbar-thumb { background: rgba(175,189,218,.55); border-radius: 8px; }
+}
+</style>
 <style id="analysis-unified-style">
   .analysis-market-section { padding:0!important; max-width:none!important; }
   .analysis-market-heading { display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin:8px 0 12px;padding:12px 15px;background:var(--surface,#fff);border:1px solid #d8e5f5;border-radius:14px; }
