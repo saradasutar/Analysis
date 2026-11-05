@@ -118,6 +118,21 @@
     .analysis-portfolio .analysis-header-account{display:none!important}
   }
 </style>
+<style id="analysis-nav-account-scroll-20261105">
+  .analysis-portfolio .side-nav .analysis-nav-account-divider {
+    width: calc(100% - 24px);height: 1px;min-height:1px;
+    margin: 10px 12px 6px;background:rgba(255,255,255,.15);
+    pointer-events:none;
+  }
+  .analysis-portfolio .side-nav .analysis-nav-account-action {
+    flex-shrink:0;min-height:42px!important;
+    color:rgba(237,241,255,.8)!important;
+  }
+  .analysis-portfolio .side-nav #logoutBtn{color:#ff9eae!important}
+  .analysis-portfolio .side-nav .analysis-nav-account-action:hover{
+    color:#fff!important;background:rgba(255,255,255,.08)!important;
+  }
+</style>
 <style id="analysis-inline-version-badges-20261105">
 /* Keep the FE and BE numbers side-by-side instead of stacking. */
 @media (min-width: 1060px) {
@@ -226,8 +241,10 @@
         <button class="nav-item" data-section="books"><span>▤</span>Books</button>
         <button id="quickDiaryBtn" class="nav-item quick-diary-nav" type="button"><span>✚</span>Quick Diary</button>
         <button class="nav-item admin-only hidden" data-section="users"><span>♙</span>Users</button>
+        <div class="analysis-nav-account-divider" aria-hidden="true"></div>
+        <button id="changePasswordBtn" class="nav-item analysis-nav-account-action" type="button"><span>⌁</span>Change password</button>
+        <button id="logoutBtn" class="nav-item danger-text analysis-nav-account-action" type="button"><span>↪</span>Log out</button>
       </nav>
-      <div class="sidebar-foot"><button id="changePasswordBtn" class="nav-item"><span>⌁</span>Change password</button><button id="logoutBtn" class="nav-item danger-text"><span>↪</span>Log out</button></div>
     </aside>
 
     <main id="mainDashboard" class="main-content" tabindex="-1">
